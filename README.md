@@ -1,28 +1,44 @@
 # Decision Court
 
-A multi-agent decision-analysis system that uses adversarial reasoning, evidence evaluation, and human context to help users examine difficult decisions from multiple perspectives.
+Decision Court uses a structured adversarial reasoning prompt to help a person examine a difficult decision from more than one side. It does not choose for them.
 
-**This project is under development.** The repository currently contains the technical foundation only.
+## Architecture
 
-## Project concept
+```
+Decision input
+     ↓
+One Gemini request
+     ↓
+Raw JSON
+     ↓
+Deterministic JSON parser
+     ↓
+Zod validation
+     ↓
+Decision report
+```
 
-Decision Court helps a person slow down a difficult choice and inspect it from more than one side. The user describes the decision. Separate agents then argue for it, argue against it, test the assumptions in those arguments, weigh the evidence and the uncertainty, and produce a balanced decision report. The report also names the factors that would change the verdict.
+One request asks the configured Gemini model for the whole report: the case for, the case against, challenged assumptions, unresolved questions, evidence dimensions, a verdict, confidence, a bottom line, for and against points, key insights, what would change the verdict, next steps, and a summary. Those sections stay in the report. They are written in that single response.
 
-## Planned architecture
+The model returns ordinary JSON. Decision Court does not send a response schema. A deterministic parser accepts a JSON object, including one surrounding code fence, and rejects prose mixed with JSON. Existing Zod schemas check scores, lengths, required sections, and controlled values. The parsed sections are assembled into the same report the interface already shows.
 
-The product will be a Next.js web app backed by a LangGraph.js workflow:
+A fast provider 503 may be tried once more when the shared deadline still has time for a short wait and another call. That retry uses the time still left. It does not start a new deadline. Authentication failures, invalid requests, unknown models, rate limits, malformed JSON, schema failures, and timeouts are not retried.
 
-1. The user submits a decision and any context they already have.
-2. An Advocate builds the strongest case for the decision.
-3. A Challenger builds the strongest case against it.
-4. The agents challenge assumptions and arguments on both sides.
-5. An evaluator examines the evidence and the remaining uncertainty.
-6. A Judge writes a balanced decision report.
-7. The system explains which factors would change the verdict.
+Adversarial reasoning is in the prompt so a fluent argument does not get the last word. The report states competing arguments, assumptions, uncertainty, missing information, and practical next steps. It does not say what the person should definitely do.
 
-Those roles will live under `src/lib/agents`, with shared model setup in `src/lib/ai`, validation schemas in `src/lib/schemas`, and shared TypeScript types in `src/types`. UI will be built later with the shadcn components in `src/components/ui`.
+Analysis confidence is how complete and well-supported the analysis is given what was supplied. It is not the probability that a choice will succeed. Dimension scores are indicators, not scientific probabilities, and the verdict is not an average of those scores.
 
-None of that workflow is implemented yet.
+## Privacy
+
+The decision and context are sent to Gemini for that analysis only. There is no database, no analytics, and no server-side copy. The server does not log the decision, the context, the prompts, or the model response. The finished report is stored in `sessionStorage` in the browser tab. Refreshing the tab can keep it. Closing the session can remove it.
+
+## Limits
+
+The analysis has one 40 second deadline and an output ceiling of about 3500 tokens. A fast 503 may use one short retry inside that same deadline. Malformed or schema-invalid JSON is rejected without another model call.
+
+`POST /api/decision/analyze` also applies an in-memory limit of 5 analyses per 10 minutes per client address. That limiter is best-effort for a single server process. It is not a distributed production rate limiter and resets when the process restarts.
+
+Prepared examples remain available at `/analysis/demo` and `/verdict/demo`. They do not call Gemini.
 
 ## Tech stack
 
@@ -31,7 +47,7 @@ None of that workflow is implemented yet.
 - Tailwind CSS
 - shadcn/ui (CSS variables, base-nova)
 - Motion
-- LangGraph.js and `@langchain/google-genai`
+- `@langchain/google-genai`
 - Zod
 - React Hook Form
 - Recharts
@@ -59,7 +75,10 @@ npm test
 npm run test:watch
 npm run lint
 npm run build
+npm run test:gemini
 ```
+
+`npm run test:gemini` makes one small real Gemini call with the same client configuration as the app. It is not part of `npm test` or `npm run build`. Restart `npm run dev` after changing `.env.local`, because Next reads environment variables when the server starts.
 
 ## Environment variables
 
@@ -68,19 +87,14 @@ Copy `.env.example` to `.env.local` and fill in the values locally. `.env.local`
 | Variable | Purpose |
 | --- | --- |
 | `GEMINI_API_KEY` | API key for the Gemini model provider |
-| `GEMINI_MODEL` | Gemini model name the agents will use |
+| `GEMINI_MODEL` | Optional Gemini model name. When empty, the server uses `gemini-3.8-flash`. |
 
-The Gemini client is not wired up yet. Tests do not call Gemini or any other external API.
+`GEMINI_API_KEY` is read only on the server. Automated tests mock the provider and do not call Gemini.
 
-## Current development status
+## Current limitations
 
-In place:
-
-- Next.js App Router application with TypeScript, Tailwind CSS, and ESLint
-- shadcn/ui initialized with a small base component set
-- Runtime dependencies for animation, agent orchestration, forms, charts, and icons
-- Folders reserved for future AI, agent, schema, and type code
-- Vitest smoke test
-- Environment variable template
-
-Still ahead: the product interface, agent workflows, the Gemini integration, authentication, and a database.
+- No accounts, saved history, or shared reports
+- No web search or document retrieval
+- The analysis screen shows the shape of the review, not live model progress
+- The in-memory rate limit does not coordinate across multiple servers
+- The analysis has one 40 second deadline. A slow response can use that whole budget.

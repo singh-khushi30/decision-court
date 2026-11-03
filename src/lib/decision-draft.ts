@@ -1,7 +1,9 @@
 import { z } from "zod";
+import { decisionTextSchema } from "@/lib/schemas/decision-request";
+import { CONTEXT_MAX, DECISION_MAX } from "@/lib/schemas/limits";
 
-export const DECISION_LIMIT = 800;
-export const CONTEXT_LIMIT = 400;
+export const DECISION_LIMIT = DECISION_MAX;
+export const CONTEXT_LIMIT = CONTEXT_MAX;
 
 const contextField = z
   .string()
@@ -9,11 +11,7 @@ const contextField = z
   .max(CONTEXT_LIMIT, `Keep this under ${CONTEXT_LIMIT} characters.`);
 
 export const decisionDraftSchema = z.object({
-  decision: z
-    .string()
-    .trim()
-    .min(1, "Describe the decision you want to examine.")
-    .max(DECISION_LIMIT, `Keep the decision under ${DECISION_LIMIT} characters.`),
+  decision: decisionTextSchema,
   situation: contextField,
   goals: contextField,
   constraints: contextField,

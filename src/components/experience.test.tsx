@@ -52,7 +52,7 @@ describe("decision form", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("walks from the decision through context to the demo analysis", async () => {
+  it("walks from the decision through context to analysis", async () => {
     render(<DecisionFlow />);
 
     fireEvent.change(screen.getByRole("textbox", { name: "Decision" }), {
@@ -79,7 +79,7 @@ describe("decision form", () => {
     expect(screen.getByText("Should I move cities for a year?")).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /analyze with ai agents/i }),
-    ).toHaveAttribute("href", "/analysis/demo");
+    ).toHaveAttribute("href", "/analysis");
   });
 });
 

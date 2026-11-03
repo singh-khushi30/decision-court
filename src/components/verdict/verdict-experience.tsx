@@ -18,8 +18,13 @@ const sections = [
   { id: "summary", label: "Summary" },
 ] as const;
 
-export function VerdictExperience() {
-  const analysis = demoAnalysis;
+export function VerdictExperience({
+  analysis = demoAnalysis,
+  source = "demo",
+}: {
+  analysis?: typeof demoAnalysis;
+  source?: "demo" | "result";
+}) {
   const stored = useDecisionDraft();
   const question = stored?.draft.decision.trim() || analysis.decision;
   const draftNote = stored
@@ -68,7 +73,7 @@ export function VerdictExperience() {
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
         <Logo />
         <p className="rounded-full bg-sand/80 px-3 py-1 text-xs tracking-wide text-espresso">
-          Prepared demo
+          {source === "demo" ? "Prepared demo" : "Your analysis"}
         </p>
       </header>
 
@@ -96,12 +101,12 @@ export function VerdictExperience() {
 
         <main id="content" className="min-w-0 space-y-14">
           <p className="max-w-2xl text-sm leading-6 text-taupe">
-            Your decision: <span className="text-espresso">{question}</span>
-            {differs
+            Your decision: <span className="text-espresso">{source === "result" ? analysis.decision : question}</span>
+            {source === "demo" && differs
               ? " The findings below are a prepared example, so you can explore the verdict. They are not a live reading of a different question."
               : null}
           </p>
-          {draftNote.length > 0 ? (
+          {source === "demo" && draftNote.length > 0 ? (
             <p className="text-sm text-taupe">
               Context from your draft is saved with the form and is not used to change these prepared scores.
             </p>
@@ -198,7 +203,7 @@ export function VerdictExperience() {
                   {analysis.bottomLine}
                 </p>
                 <p className="mt-3 text-xs tracking-wide text-taupe uppercase">
-                  Prepared demo copy
+                  {source === "demo" ? "Prepared demo copy" : "A synthesis, not an instruction"}
                 </p>
               </aside>
             </article>

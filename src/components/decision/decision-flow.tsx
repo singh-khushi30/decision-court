@@ -220,7 +220,7 @@ function DecisionForm({
               Review your decision
             </h1>
             <p className="mt-4 max-w-lg text-base leading-7 text-espresso/75">
-              This summary is what you will carry into the prepared demo. No model is called.
+              This is what the Advocate and Challenger will examine. The analysis does not choose for you.
             </p>
             <dl className="mt-8 divide-y divide-sand rounded-3xl border border-sand bg-cream">
               <ReviewItem label="Decision" value={review.decision} />
@@ -241,14 +241,16 @@ function DecisionForm({
               </Button>
               <div className="flex flex-col items-end gap-2">
                 <Link
-                  href="/analysis/demo"
+                  href="/analysis"
                   onClick={() => writeDecisionDraft(form.getValues(), 3)}
                   className="inline-flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-medium text-parchment transition-colors hover:bg-espresso focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass"
                 >
                   Analyze with AI Agents
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </Link>
-                <p className="text-xs text-taupe">Opens a prepared demo.</p>
+                <p className="max-w-xs text-right text-xs leading-5 text-taupe">
+                  Your words are sent for this analysis and are not stored on the server.
+                </p>
               </div>
             </div>
           </section>
