@@ -4,6 +4,7 @@ import { VerdictResult } from "@/components/verdict/verdict-result";
 export const metadata: Metadata = {
   title: "Verdict",
   description: "A balanced reading of the decision you submitted.",
+  alternates: { canonical: "/verdict/result" },
 };
 
 export default function VerdictResultPage() {

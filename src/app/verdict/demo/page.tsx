@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Verdict demo",
   description:
     "A prepared Decision Court verdict with the case for, the case against, and what would change it.",
+  alternates: { canonical: "/verdict/demo" },
 };
 
 export default function VerdictDemoPage() {

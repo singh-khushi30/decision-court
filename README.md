@@ -2,6 +2,8 @@
 
 A hard decision, examined from both sides, with the uncertainty left visible.
 
+[Live Demo](https://decision-courtt.vercel.app)
+
 Decision Court is an AI-powered decision-analysis experience. It does not act as a yes-or-no oracle. It builds the case for and the case against, challenges the assumptions underneath both, weighs the evidence that was actually supplied, and returns a balanced verdict.
 
 The report includes what is still unknown, and the specific changes that could move the conclusion.
@@ -30,7 +32,7 @@ The report includes what is still unknown, and the specific changes that could m
 
 ## Overview
 
-Decision Court helps a person slow down a difficult choice. They describe the decision and the context around it. The product returns an Advocate case, a Challenger case, the assumptions those cases depend on, an evidence reading, and a Judge's synthesis.
+The [live demo](https://decision-courtt.vercel.app) is the deployed app. Decision Court helps a person slow down a difficult choice. They describe the decision and the context around it. The product returns an Advocate case, a Challenger case, the assumptions those cases depend on, an evidence reading, and a Judge's synthesis.
 
 The verdict is a reading of the supplied information. It is not a command to act, and analysis confidence is not the probability that a choice will succeed.
 

@@ -3,7 +3,10 @@ import { LandingPage } from "@/components/landing/landing-page";
 
 export const metadata: Metadata = {
   description:
-    "Two AI agents argue both sides of a difficult decision. A judge weighs the evidence. You get a clear, balanced verdict.",
+    "Decision Court examines a difficult decision from both sides and returns a balanced verdict, including what is still unknown and what would change the conclusion.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function Home() {

@@ -5,6 +5,7 @@ import { DecideExperience } from "@/components/decision/decide-experience";
 export const metadata: Metadata = {
   title: "Your decision",
   description: "Describe a difficult decision and add the context around it.",
+  alternates: { canonical: "/decide" },
 };
 
 export default function DecidePage() {

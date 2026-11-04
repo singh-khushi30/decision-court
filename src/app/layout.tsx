@@ -24,13 +24,29 @@ const script = Caveat({
   variable: "--font-caveat",
 });
 
+const description =
+  "Decision Court examines a difficult decision from both sides and returns a balanced verdict, including what is still unknown and what would change the conclusion.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://decision-courtt.vercel.app"),
   title: {
     default: "Decision Court",
     template: "%s · Decision Court",
   },
-  description:
-    "A multi-agent decision-analysis system for examining difficult decisions from multiple perspectives.",
+  description,
+  openGraph: {
+    title: "Decision Court",
+    description,
+    url: "https://decision-courtt.vercel.app",
+    siteName: "Decision Court",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary",
+    title: "Decision Court",
+    description,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
